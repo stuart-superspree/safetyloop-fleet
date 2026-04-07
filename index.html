@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SafetyLoop™ – Construction Site Compliance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-dark:   #1A2E1A;
+    --brand-mid:    #2D5016;
+    --brand-green:  #3A7D1E;
+    --brand-lime:   #78B832;
+    --brand-yellow: #F5C518;
+    --brand-orange: #E07B1A;
+    --brand-light:  #F2F5EE;
+    --brand-pale:   #E4EDD8;
+    --white:        #FFFFFF;
+    --text-dark:    #1C2B12;
+    --text-mid:     #526040;
+    --text-light:   #8FA070;
+    --green:        #276749;
+    --green-light:  #E6F5EE;
+    --amber:        #9A6B1E;
+    --amber-light:  #FEF6E4;
+    --red:          #B91C1C;
+    --red-light:    #FDECEA;
+    --shadow-sm:    0 1px 3px rgba(26,46,26,0.07), 0 1px 2px rgba(26,46,26,0.04);
+    --shadow-md:    0 4px 16px rgba(26,46,26,0.10), 0 2px 6px rgba(26,46,26,0.05);
+    --shadow-lg:    0 10px 40px rgba(26,46,26,0.14);
+    --cx: 16px;
+    --cr: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--brand-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* ─── OFFLINE BANNER ─── */
+  .offline-banner {
+    display: none;
+    background: #7B3F00;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px 16px;
+    letter-spacing: 0.3px;
+  }
+  .offline-banner.show { display: block; }
+
+  /* ─── HEADER ─── */
+  .app-header {
+    background: var(--brand-dark);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.28);
+    overflow: hidden;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+  }
+
+  .logo-area { display: flex; align-items: center; gap: 10px; }
+
+  .brand-badge {
+    width: 38px; height: 38px;
+    background: var(--brand-yellow);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+
+  .logo-text h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 18px; color: #fff;
+    letter-spacing: 0.5px; line-height: 1;
+  }
+
+  .logo-text span { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 400; }
+
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+  .connection-dot {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.10);
+    border-radius: 20px; padding: 5px 10px;
+  }
+
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #68D391; animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.6; transform:scale(0.85); }
+  }
+
+  .connection-dot span { font-size: 11px; color: #9AE6B4; font-weight: 600; }
+
+  .last-updated {
+    font-size: 10px; color: rgba(255,255,255,0.40);
+    letter-spacing: 0.2px; padding-right: 2px;
+  }
+
+  /* ── Site strip ── */
+  .site-strip {
+    background: var(--brand-orange);
+    padding: 8px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .site-strip .site-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 17px; color: #fff; letter-spacing: 0.4px;
+  }
+
+  .site-strip .site-meta { font-size: 11px; color: rgba(255,255,255,0.82); }
+  .site-strip .scan-info { font-size: 11px; color: rgba(255,255,255,0.82); text-align: right; }
+
+  /* ─── NAV TABS ─── */
+  .nav-tabs {
+    display: flex; background: var(--white);
+    border-bottom: 2px solid var(--brand-light);
+    position: sticky; top: 108px; z-index: 90;
+    box-shadow: 0 3px 8px rgba(26,46,26,0.07);
+  }
+
+  .nav-tab {
+    flex: 1; padding: 12px 4px 10px; border: none; background: none;
+    font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 600;
+    color: var(--text-light); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: color 0.2s; letter-spacing: 0.3px; text-transform: uppercase;
+    position: relative;
+  }
+
+  .nav-tab .tab-icon { font-size: 20px; line-height: 1; }
+  .nav-tab.active { color: var(--brand-mid); }
+  .nav-tab.active::after {
+    content: ''; position: absolute; bottom: -2px; left: 20%; right: 20%;
+    height: 3px; background: var(--brand-green); border-radius: 3px 3px 0 0;
+  }
+
+  .nav-tab .badge {
+    position: absolute; top: 8px; right: calc(50% - 16px);
+    background: var(--red); color: white;
+    font-size: 9px; font-weight: 700;
+    width: 16px; height: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; padding: 14px 0 0; animation: fadeIn 0.25s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 700; color: var(--text-dark);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin: 18px var(--cx) 10px; padding: 0;
+  }
+
+  /* ─── COMPLIANCE HERO ─── */
+  .cert-hero {
+    background: linear-gradient(135deg, #3A7D1E 0%, #2D5016 100%);
+    border-radius: var(--cr); padding: 20px var(--cx);
+    margin: 14px var(--cx); position: relative; overflow: hidden;
+  }
+
+  .cert-hero::before {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(245,197,24,0.10);
+  }
+
+  .cert-label {
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.65);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+
+  .cert-status-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+
+  .cert-status-pill {
+    background: #276749; color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 14px; padding: 4px 12px;
+    border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+
+  .cert-status-pill.warn { background: var(--amber); }
+  .cert-status-pill.danger { background: var(--red); }
+
+  .cert-type {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 800; color: var(--white);
+    line-height: 1; margin-bottom: 14px;
+  }
+
+  .cert-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .cert-date-box { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px; }
+  .cert-date-box .date-label {
+    font-size: 10px; color: rgba(255,255,255,0.60);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px;
+  }
+  .cert-date-box .date-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 700; color: var(--white);
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .cert-progress-wrap {
+    background: var(--white); border-radius: var(--cr);
+    padding: 16px var(--cx); margin: 0 var(--cx) 14px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-title { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+
+  .progress-days {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px; font-weight: 800; color: var(--brand-green); line-height: 1;
+  }
+  .progress-days span { font-size: 13px; font-weight: 500; color: var(--text-mid); }
+
+  .progress-bar-track {
+    height: 12px; background: var(--brand-light);
+    border-radius: 10px; overflow: hidden; margin-bottom: 6px;
+  }
+
+  .progress-bar-fill {
+    height: 100%; border-radius: 10px;
+    background: linear-gradient(90deg, var(--brand-green), var(--brand-lime));
+    width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .progress-bar-fill.warning { background: linear-gradient(90deg, var(--amber), #F59E0B); }
+
+  .progress-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-light); }
+
+  /* ─── COMPLIANCE CHECKLIST ─── */
+  .checklist { display: flex; flex-direction: column; gap: 8px; margin: 0 var(--cx); }
+
+  .check-item {
+    background: var(--white); border-radius: var(--cr);
+    padding: 13px 14px; display: flex; gap: 12px;
+    align-items: center; box-shadow: var(--shadow-sm);
+    cursor: pointer; transition: transform 0.1s;
+  }
+
+  .check-item:active { transform: scale(0.98); }
+
+  .check-circle {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .check-circle.ok     { background: var(--green-light); color: var(--green); }
+  .check-circle.warn   { background: var(--amber-light); color: var(--amber); }
+  .check-circle.danger { background: var(--red-light); color: var(--red); }
+
+  .check-body { flex: 1; }
+  .check-title { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+  .check-sub   { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+
+  .check-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 9px;
+    border-radius: 20px; text-transform: uppercase; flex-shrink: 0;
+    letter-spacing: 0.4px;
+  }
+
+  .check-badge.ok     { background: var(--green-light); color: var(--green); }
+  .check-badge.warn   { background: var(--amber-light); color: var(--amber); }
+  .check-badge.danger { background: var(--red-light); color: var(--red); }
+
+  /* ─── TIMELINE ─── */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin: 0 var(--cx); }
+
+  .timeline-item { display: flex; gap: 12px; position: relative; padding-bottom: 16px; }
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-spine { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 28px; }
+
+  .timeline-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+
+  .timeline-dot.done    { background: var(--green-light); color: var(--green); }
+  .timeline-dot.current { background: var(--brand-green); color: white; }
+  .timeline-dot.future  { background: var(--brand-light); color: var(--text-light); }
+
+  .timeline-line { flex: 1; width: 2px; background: var(--brand-pale); margin-top: 4px; }
+
+  .timeline-content {
+    flex: 1; background: var(--white); border-radius: var(--cr);
+    padding: 10px 12px; box-shadow: var(--shadow-sm);
+  }
+
+  .timeline-content.current { border-left: 3px solid var(--brand-green); }
+
+  .tl-title { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+  .tl-date  { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+  .tl-badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px; margin-top: 4px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  .tl-badge.complete { background: var(--green-light); color: var(--green); }
+  .tl-badge.active   { background: #DBEAFE; color: #1D4ED8; }
+  .tl-badge.pending  { background: var(--brand-light); color: var(--text-light); }
+
+  /* ─── ACTIVITY ─── */
+  .activity-list { display: flex; flex-direction: column; gap: 8px; margin: 0 var(--cx); }
+
+  .activity-item {
+    background: var(--white); border-radius: var(--cr);
+    padding: 12px 14px; display: flex; gap: 12px;
+    align-items: flex-start; box-shadow: var(--shadow-sm);
+  }
+
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .activity-dot.blue  { background: var(--brand-green); }
+  .activity-dot.green { background: var(--green); }
+  .activity-dot.amber { background: var(--amber); }
+  .activity-dot.red   { background: var(--red); }
+
+  .activity-text { font-size: 13px; color: var(--text-dark); line-height: 1.4; }
+  .activity-time { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+  /* ─── OUTSTANDING ACTIONS PANEL ─── */
+  .actions-panel {
+    background: var(--white); border-radius: var(--cr);
+    margin: 0 var(--cx) 14px; box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .actions-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; cursor: pointer;
+    background: #FEF6E4; border-bottom: 1px solid var(--brand-pale);
+  }
+
+  .actions-header-left { display: flex; align-items: center; gap: 8px; }
+  .actions-header h4 { font-size: 13px; font-weight: 700; color: var(--amber); }
+  .actions-count {
+    background: var(--amber); color: white;
+    font-size: 10px; font-weight: 700;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .actions-chevron { color: var(--amber); font-size: 16px; transition: transform 0.2s; }
+  .actions-chevron.open { transform: rotate(90deg); }
+
+  .actions-body { display: none; }
+  .actions-body.open { display: block; }
+
+  .action-item {
+    padding: 12px 16px; border-bottom: 1px solid var(--brand-light);
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+
+  .action-item:last-child { border-bottom: none; }
+
+  .action-badge {
+    font-size: 9px; font-weight: 700; padding: 3px 8px;
+    border-radius: 20px; text-transform: uppercase; flex-shrink: 0; margin-top: 2px;
+    background: var(--amber-light); color: var(--amber);
+  }
+
+  .action-badge.resolved { background: var(--green-light); color: var(--green); }
+
+  .action-text { font-size: 13px; color: var(--text-dark); line-height: 1.4; flex: 1; }
+  .action-date { font-size: 11px; color: var(--text-light); margin-top: 3px; }
+
+  .action-ack {
+    margin-top: 8px; font-size: 12px; font-weight: 600;
+    color: var(--brand-green); cursor: pointer; text-decoration: underline;
+    background: none; border: none; padding: 0;
+  }
+
+  /* ─── HSE NOTIFY LINK ─── */
+  .hse-link {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--brand-green); border-radius: var(--cr);
+    padding: 14px var(--cx); margin: 0 var(--cx) 14px;
+    text-decoration: none; transition: opacity 0.15s;
+    cursor: pointer; border: none; width: 100%; text-align: left;
+  }
+
+  .hse-link:active { opacity: 0.85; }
+
+  .hse-logo-box {
+    width: 40px; height: 40px; background: var(--white); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+
+  .hse-text h4 { font-size: 13px; font-weight: 600; color: var(--white); }
+  .hse-text p  { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 1px; }
+  .hse-arrow   { margin-left: auto; color: rgba(255,255,255,0.60); font-size: 18px; }
+
+  /* ─── EMERGENCY CONTACT ─── */
+  .emergency-btn {
+    display: flex; align-items: center; gap: 14px;
+    background: #7B1A1A; border-radius: var(--cr);
+    padding: 14px var(--cx); margin: 0 var(--cx) 14px;
+    cursor: pointer; border: none; width: 100%; text-align: left;
+    transition: opacity 0.15s;
+  }
+
+  .emergency-btn:active { opacity: 0.85; }
+
+  .emergency-icon {
+    width: 40px; height: 40px; background: rgba(255,255,255,0.12);
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+
+  .emergency-text h4 { font-size: 14px; font-weight: 700; color: #fff; }
+  .emergency-text p  { font-size: 11px; color: rgba(255,255,255,0.70); margin-top: 1px; }
+  .emergency-arrow   { margin-left: auto; color: rgba(255,255,255,0.50); font-size: 18px; }
+
+  /* ─── FIRST AID BUTTON ─── */
+  .firstaid-btn {
+    display: flex; align-items: center; gap: 14px;
+    background: #B91C1C; border-radius: var(--cr);
+    padding: 14px var(--cx); margin: 0 var(--cx) 14px;
+    cursor: pointer; border: none; width: 100%; text-align: left;
+    transition: opacity 0.15s;
+  }
+  .firstaid-btn:active { opacity: 0.85; }
+
+  /* ─── DOCUMENTS ─── */
+  .doc-summary-bar {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--white); border-radius: var(--cr);
+    padding: 11px 14px; margin: 0 var(--cx) 10px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .doc-summary-bar .ds-item { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
+  .doc-summary-bar .ds-dot  { width: 8px; height: 8px; border-radius: 50%; }
+  .ds-dot.ok   { background: var(--green); }
+  .ds-dot.warn { background: var(--amber); }
+  .ds-dot.exp  { background: var(--red); }
+  .ds-sep { width: 1px; height: 18px; background: var(--brand-pale); margin: 0 4px; }
+
+  .doc-search-wrap {
+    position: relative; margin: 0 var(--cx) 10px;
+  }
+
+  .doc-search-icon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 14px; pointer-events: none;
+  }
+
+  .doc-search {
+    width: 100%; padding: 11px 12px 11px 36px;
+    border: 1.5px solid var(--brand-pale); border-radius: var(--cr);
+    font-family: 'Barlow', sans-serif; font-size: 14px; color: var(--text-dark);
+    background: var(--white); outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .doc-search:focus { border-color: var(--brand-green); }
+
+  .doc-filter-row {
+    display: flex; gap: 8px; padding: 0 var(--cx) 10px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-chip {
+    flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+    border: 1.5px solid var(--brand-pale); background: var(--white);
+    font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600;
+    color: var(--text-mid); cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-chip.active {
+    background: var(--brand-green); border-color: var(--brand-green); color: white;
+  }
+
+  /* Skeleton loader */
+  .doc-skeleton { display: none; padding: 0 var(--cx); }
+  .doc-skeleton.show { display: block; }
+
+  .skel-row {
+    display: flex; gap: 12px; align-items: center;
+    background: var(--white); border-radius: var(--cr);
+    padding: 14px; margin-bottom: 8px;
+  }
+
+  .skel-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(90deg, var(--brand-pale) 25%, var(--brand-light) 50%, var(--brand-pale) 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite;
+    flex-shrink: 0;
+  }
+
+  .skel-lines { flex: 1; }
+
+  .skel-line {
+    height: 10px; border-radius: 6px; margin-bottom: 6px;
+    background: linear-gradient(90deg, var(--brand-pale) 25%, var(--brand-light) 50%, var(--brand-pale) 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  }
+
+  .skel-line.short    { width: 60%; }
+  .skel-line.shorter  { width: 40%; }
+
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .doc-list { padding: 0 var(--cx); display: flex; flex-direction: column; gap: 8px; }
+
+  .doc-card {
+    background: var(--white); border-radius: var(--cr);
+    padding: 13px 14px; display: flex; gap: 12px;
+    align-items: center; box-shadow: var(--shadow-sm);
+    cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .doc-card:active { transform: scale(0.98); }
+  .doc-card.hidden { display: none; }
+
+  .doc-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+
+  .doc-icon.legal   { background: #EDE9FE; }
+  .doc-icon.risk    { background: #FEF3C7; }
+  .doc-icon.method  { background: #DBEAFE; }
+  .doc-icon.training{ background: #D1FAE5; }
+  .doc-icon.inspect { background: #FCE7F3; }
+  .doc-icon.equip   { background: #FEF9C3; }
+
+  .doc-info { flex: 1; min-width: 0; }
+  .doc-name { font-size: 13px; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .doc-meta { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+
+  .doc-status {
+    font-size: 10px; font-weight: 700; padding: 4px 9px;
+    border-radius: 20px; text-transform: uppercase; flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+
+  .doc-status.valid  { background: var(--green-light); color: var(--green); }
+  .doc-status.review { background: var(--amber-light); color: var(--amber); }
+  .doc-status.expired{ background: var(--red-light); color: var(--red); }
+
+  .doc-arrow { color: var(--text-light); font-size: 18px; flex-shrink: 0; }
+
+  /* ─── REPORT FORM ─── */
+  .report-intro {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--white); border-radius: var(--cr);
+    padding: 14px var(--cx); margin: 0 var(--cx) 8px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .report-intro-icon { font-size: 28px; flex-shrink: 0; }
+  .report-intro h3 { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+  .report-intro p  { font-size: 12px; color: var(--text-mid); margin-top: 4px; line-height: 1.5; }
+
+  .form-body { padding: 0 var(--cx); }
+
+  .form-group { margin-bottom: 14px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text-mid); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  .form-control {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--brand-pale); border-radius: var(--cr);
+    font-family: 'Barlow', sans-serif; font-size: 14px; color: var(--text-dark);
+    background: var(--white); outline: none;
+    transition: border-color 0.2s; appearance: none;
+  }
+
+  .form-control:focus { border-color: var(--brand-green); }
+
+  textarea.form-control { min-height: 90px; resize: vertical; }
+
+  .severity-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .severity-btn {
+    padding: 10px 4px; border: 1.5px solid var(--brand-pale); border-radius: var(--cr);
+    background: var(--white); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: all 0.15s;
+  }
+
+  .severity-btn.active.low    { border-color: var(--green); background: var(--green-light); }
+  .severity-btn.active.medium { border-color: var(--amber); background: var(--amber-light); }
+  .severity-btn.active.high   { border-color: var(--red); background: var(--red-light); }
+
+  .sev-icon  { font-size: 22px; }
+  .sev-label { font-size: 11px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; }
+
+  .photo-upload {
+    border: 2px dashed var(--brand-pale); border-radius: var(--cr);
+    padding: 20px; text-align: center; cursor: pointer;
+    background: var(--white); transition: border-color 0.2s;
+  }
+
+  .photo-upload:active { border-color: var(--brand-green); }
+  .photo-upload .upload-icon { font-size: 28px; margin-bottom: 6px; }
+  .photo-upload p   { font-size: 13px; color: var(--text-mid); }
+  .photo-upload span { font-size: 11px; color: var(--text-light); }
+
+  .btn-primary {
+    width: 100%; background: #B91C1C; color: var(--white); border: none;
+    border-radius: var(--cr); padding: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(185,28,28,0.22); margin-top: 4px;
+  }
+
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* ─── REPORT CONFIRMATION ─── */
+  .report-confirm {
+    display: none; padding: 32px var(--cx); text-align: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .report-confirm.show { display: block; }
+
+  .confirm-icon { font-size: 56px; margin-bottom: 16px; }
+
+  .confirm-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;
+  }
+
+  .confirm-sub { font-size: 14px; color: var(--text-mid); line-height: 1.6; margin-bottom: 20px; }
+
+  .confirm-detail {
+    background: var(--white); border-radius: var(--cr);
+    padding: 14px 16px; box-shadow: var(--shadow-sm);
+    text-align: left; margin-bottom: 20px;
+  }
+
+  .confirm-detail-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--brand-light); font-size: 13px; }
+  .confirm-detail-row:last-child { border-bottom: none; }
+  .confirm-detail-row .cd-key { color: var(--text-mid); }
+  .confirm-detail-row .cd-val { font-weight: 600; color: var(--text-dark); }
+
+  .btn-outline {
+    width: 100%; background: transparent; color: var(--brand-green);
+    border: 2px solid var(--brand-green); border-radius: var(--cr); padding: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.15s;
+  }
+
+  .btn-outline:active { background: var(--brand-light); }
+
+  /* ─── SITE / STAT ─── */
+  .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin: 0 var(--cx) 14px;
+  }
+
+  .stat-card { background: var(--white); border-radius: var(--cr); padding: 14px; box-shadow: var(--shadow-sm); }
+  .stat-card .stat-icon { font-size: 22px; margin-bottom: 6px; }
+  .stat-card .stat-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px; font-weight: 800; color: var(--brand-green); line-height: 1;
+  }
+
+  .stat-card .stat-val.ok   { color: var(--green); }
+  .stat-card .stat-val.warn { color: var(--amber); }
+  .stat-card .stat-val.danger { color: var(--red); }
+  .stat-card .stat-label { font-size: 11px; color: var(--text-mid); margin-top: 3px; }
+
+  .info-row {
+    background: var(--white); border-radius: var(--cr);
+    overflow: hidden; box-shadow: var(--shadow-sm); margin: 0 var(--cx) 14px;
+  }
+
+  .info-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 16px; border-bottom: 1px solid var(--brand-light);
+  }
+
+  .info-item:last-child { border-bottom: none; }
+  .info-item .info-key { font-size: 13px; color: var(--text-mid); }
+  .info-item .info-val { font-size: 13px; font-weight: 600; color: var(--text-dark); text-align: right; max-width: 55%; }
+
+  /* CDM Contact card */
+  .contact-card {
+    background: var(--white); border-radius: var(--cr);
+    margin: 0 var(--cx) 14px; overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+
+  .contact-card .cv-header {
+    background: var(--brand-green); padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .cv-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  .cv-name { font-size: 14px; font-weight: 700; color: #fff; }
+  .cv-role { font-size: 11px; color: rgba(255,255,255,0.70); margin-top: 1px; }
+
+  .cv-actions { display: flex; }
+
+  .cv-action-btn {
+    flex: 1; padding: 13px 8px; border: none; cursor: pointer;
+    font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: var(--white); border-right: 1px solid var(--brand-light);
+    color: var(--brand-green); transition: background 0.15s;
+  }
+
+  .cv-action-btn:last-child { border-right: none; }
+  .cv-action-btn:active { background: var(--brand-light); }
+  .cv-action-btn .cv-btn-icon { font-size: 20px; }
+
+  /* ─── REGULATIONS SECTION ─── */
+  .reg-list { display: flex; flex-direction: column; gap: 8px; margin: 0 var(--cx); }
+
+  .reg-item {
+    background: var(--white); border-radius: var(--cr);
+    padding: 13px 14px; display: flex; gap: 12px;
+    align-items: flex-start; box-shadow: var(--shadow-sm);
+  }
+
+  .reg-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+
+  .reg-title { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+  .reg-sub   { font-size: 11px; color: var(--text-mid); margin-top: 3px; line-height: 1.5; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--brand-dark); color: white;
+    padding: 14px 20px; border-radius: var(--cr);
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    z-index: 999; box-shadow: var(--shadow-lg);
+    transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+    max-width: 90%; text-align: center;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,22,10,0.6); z-index: 200; backdrop-filter: blur(3px);
+  }
+
+  .modal-overlay.open { display: flex; align-items: flex-end; }
+
+  .modal-sheet {
+    background: var(--white); border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 430px; margin: 0 auto;
+    padding: 20px 20px 36px; animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .modal-handle { width: 40px; height: 4px; background: var(--brand-pale); border-radius: 4px; margin: 0 auto 16px; }
+  .modal-title  { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+  .modal-sub    { font-size: 13px; color: var(--text-mid); margin-bottom: 16px; }
+
+  .modal-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+
+  .modal-meta-item { background: var(--brand-light); border-radius: 8px; padding: 10px 12px; }
+  .modal-meta-item .mm-label { font-size: 10px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+  .modal-meta-item .mm-val   { font-size: 14px; font-weight: 600; color: var(--text-dark); margin-top: 2px; }
+
+  .modal-loading { display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 10px; }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--brand-pale);
+    border-top-color: var(--brand-green); border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal-loading p { font-size: 13px; color: var(--text-mid); }
+
+  .btn-secondary {
+    width: 100%; background: var(--brand-green); color: white; border: none;
+    border-radius: var(--cr); padding: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 8px; transition: opacity 0.15s;
+  }
+
+  .btn-secondary:active { opacity: 0.85; }
+
+  .pb-safe { padding-bottom: 32px; }
+
+  /* Induction checklist toggle */
+  .induction-item {
+    background: var(--white); border-radius: var(--cr);
+    padding: 12px 14px; display: flex; gap: 12px;
+    align-items: center; box-shadow: var(--shadow-sm);
+    margin-bottom: 8px; cursor: pointer;
+  }
+
+  .induction-checkbox {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--brand-pale); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; transition: all 0.15s;
+  }
+
+  .induction-checkbox.checked {
+    background: var(--brand-green); border-color: var(--brand-green); color: white;
+  }
+
+  .induction-label { font-size: 13px; font-weight: 500; color: var(--text-dark); flex: 1; }
+  .induction-label.checked { color: var(--text-mid); text-decoration: line-through; }
+
+  /* PPE chip row */
+  .ppe-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    background: var(--white); border-radius: var(--cr);
+    padding: 14px; margin: 0 var(--cx) 14px; box-shadow: var(--shadow-sm);
+  }
+
+  .ppe-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--brand-light); border-radius: 20px;
+    padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--text-mid);
+  }
+
+  .ppe-chip .ppe-icon { font-size: 16px; }
+  .ppe-chip.required { background: var(--amber-light); color: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offline-banner">
+  📵 No connection — showing cached data. Last synced: <span id="last-sync-time">—</span>
+</div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="brand-badge">🏗️</div>
+      <div class="logo-text">
+        <h1>SafetyLoop™</h1>
+        <span>Construction Site Compliance · v1</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="connection-dot" id="conn-dot">
+        <div class="dot" id="conn-dot-inner"></div>
+        <span id="conn-label">Live</span>
+      </div>
+      <div class="last-updated" id="last-updated-ts">Updated —</div>
+    </div>
+  </div>
+  <div class="site-strip">
+    <div>
+      <div class="site-name">Greenfield Phase 2</div>
+      <div class="site-meta">Ref: CDM-2025-0471 · Manchester, GM</div>
+    </div>
+    <div class="scan-info">
+      <div>Scanned via NFC</div>
+      <div id="scan-time">—</div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showTab('overview', this)">
+    <span class="tab-icon">🛡️</span>Overview
+  </button>
+  <button class="nav-tab" onclick="showTab('documents', this)">
+    <span class="tab-icon">📂</span>Docs
+  </button>
+  <button class="nav-tab" onclick="showTab('report', this)">
+    <span class="tab-icon">⚠️</span>Report
+    <span class="badge" id="report-badge">2</span>
+  </button>
+  <button class="nav-tab" onclick="showTab('site', this)">
+    <span class="tab-icon">🏗️</span>Site
+  </button>
+</nav>
+
+
+<!-- ═══════════════════════════════
+     SCREEN: OVERVIEW
+════════════════════════════════ -->
+<section class="screen active" id="screen-overview">
+
+  <!-- Compliance hero -->
+  <div class="cert-hero">
+    <div class="cert-label">Construction Phase Plan</div>
+    <div class="cert-status-row">
+      <div class="cert-status-pill">✓ Active</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);">CDM 2015 Compliant</div>
+    </div>
+    <div class="cert-type">Notifiable Project<br>F10 Notification Lodged</div>
+    <div class="cert-dates">
+      <div class="cert-date-box">
+        <div class="date-label">Works Start</div>
+        <div class="date-value">12 Jan 2026</div>
+      </div>
+      <div class="cert-date-box">
+        <div class="date-label">Planned Completion</div>
+        <div class="date-value" style="color:var(--brand-yellow);">30 Nov 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Days remaining bar -->
+  <div class="cert-progress-wrap">
+    <div class="progress-header">
+      <div class="progress-title">Project Duration</div>
+      <div class="progress-days" id="days-remaining-display">— <span>days remaining</span></div>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="cert-progress" style="width:0%;"></div>
+    </div>
+    <div class="progress-labels">
+      <span>Start: 12 Jan 2026</span>
+      <span>End: 30 Nov 2026</span>
+    </div>
+  </div>
+
+  <!-- Site compliance checklist -->
+  <div class="section-title">Site Compliance Status</div>
+  <div class="checklist">
+
+    <div class="check-item" onclick="showToast('✅ Construction Phase Plan — last reviewed 01 Apr 2026')">
+      <div class="check-circle ok">✓</div>
+      <div class="check-body">
+        <div class="check-title">Construction Phase Plan</div>
+        <div class="check-sub">CDM 2015 — Principal Contractor</div>
+      </div>
+      <div class="check-badge ok">Current</div>
+    </div>
+
+    <div class="check-item" onclick="showToast('✅ F10 Notification confirmed by HSE — Ref: F10-2025-0471')">
+      <div class="check-circle ok">✓</div>
+      <div class="check-body">
+        <div class="check-title">HSE F10 Notification</div>
+        <div class="check-sub">Submitted 8 Jan 2026 · Ref: F10-2025-0471</div>
+      </div>
+      <div class="check-badge ok">Lodged</div>
+    </div>
+
+    <div class="check-item" onclick="showToast('✅ First Aid box inspected 25 Mar 2026. Accident book on site.')">
+      <div class="check-circle ok">✓</div>
+      <div class="check-body">
+        <div class="check-title">First Aid &amp; Accident Book</div>
+        <div class="check-sub">Box inspected 25 Mar 2026 · Book on site</div>
+      </div>
+      <div class="check-badge ok">OK</div>
+    </div>
+
+    <div class="check-item" onclick="showToast('✅ Site induction records held — 34 workers inducted this month')">
+      <div class="check-circle ok">✓</div>
+      <div class="check-body">
+        <div class="check-title">Site Induction Records</div>
+        <div class="check-sub">34 workers inducted · Updated 01 Apr 2026</div>
+      </div>
+      <div class="check-badge ok">Current</div>
+    </div>
+
+    <div class="check-item" onclick="showToast('⚠️ 2 risk assessments require review — Excavation RA and Hot Works RA')">
+      <div class="check-circle warn">!</div>
+      <div class="check-body">
+        <div class="check-title">Risk Assessments</div>
+        <div class="check-sub">2 require review — Excavation &amp; Hot Works</div>
+      </div>
+      <div class="check-badge warn">Review</div>
+    </div>
+
+    <div class="check-item" onclick="showToast('✅ All method statements current — last updated 20 Mar 2026')">
+      <div class="check-circle ok">✓</div>
+      <div class="check-body">
+        <div class="check-title">Method Statements (RAMS)</div>
+        <div class="check-sub">12 statements active · Mar 2026</div>
+      </div>
+      <div class="check-badge ok">Current</div>
+    </div>
+
+    <div class="check-item" onclick="showToast('✅ Site safety signage last audited 18 Mar 2026. All zones marked.')">
+      <div class="check-circle ok">✓</div>
+      <div class="check-body">
+        <div class="check-title">Site Safety Signage</div>
+        <div class="check-sub">Hazard, PPE &amp; fire exit signs audited Mar 2026</div>
+      </div>
+      <div class="check-badge ok">Audited</div>
+    </div>
+
+  </div>
+
+  <!-- PPE Required on Site -->
+  <div class="section-title">PPE Requirements</div>
+  <div class="ppe-row">
+    <div class="ppe-chip required"><span class="ppe-icon">⛑️</span>Hard Hat</div>
+    <div class="ppe-chip required"><span class="ppe-icon">🦺</span>Hi-Vis Vest</div>
+    <div class="ppe-chip required"><span class="ppe-icon">🥾</span>Safety Boots</div>
+    <div class="ppe-chip"><span class="ppe-icon">🧤</span>Gloves (zone)</div>
+    <div class="ppe-chip"><span class="ppe-icon">😷</span>RPE (zone)</div>
+    <div class="ppe-chip"><span class="ppe-icon">🥽</span>Eye Prot. (zone)</div>
+  </div>
+
+  <!-- Outstanding Actions -->
+  <div class="section-title">Outstanding Actions</div>
+  <div class="actions-panel">
+    <div class="actions-header" onclick="toggleActions()">
+      <div class="actions-header-left">
+        <div class="actions-count" id="actions-count-badge">2</div>
+        <h4 id="actions-header-title">2 Open Actions Require Attention</h4>
+      </div>
+      <span class="actions-chevron" id="actions-chevron">›</span>
+    </div>
+    <div class="actions-body" id="actions-body">
+      <div class="action-item">
+        <div>
+          <span class="action-badge">Open</span>
+          <div class="action-text">Excavation Risk Assessment overdue for review — last reviewed Nov 2025. Required before trenching resumes on Block C.</div>
+          <div class="action-date">Raised · 22 Mar 2026 · Site Manager T. Barker</div>
+          <button class="action-ack" onclick="acknowledgeAction(this)">Mark as resolved ›</button>
+        </div>
+      </div>
+      <div class="action-item">
+        <div>
+          <span class="action-badge">Open</span>
+          <div class="action-text">Hot Works permit system — 3 operatives not yet signed onto the new permit procedure. Induction required before commencement.</div>
+          <div class="action-date">Raised · 28 Mar 2026 · CDM Coordinator J. Patel</div>
+          <button class="action-ack" onclick="acknowledgeAction(this)">Mark as resolved ›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="section-title">Recent Activity</div>
+  <div class="activity-list">
+    <div class="activity-item">
+      <div class="activity-dot blue"></div>
+      <div>
+        <div class="activity-text">Construction Phase Plan v3 approved by Principal Designer</div>
+        <div class="activity-time">01 Apr 2026 · 08:30</div>
+      </div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-dot green"></div>
+      <div>
+        <div class="activity-text">Site induction completed — 6 new operatives (Block D groundworks crew)</div>
+        <div class="activity-time">31 Mar 2026 · 07:45</div>
+      </div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-dot amber"></div>
+      <div>
+        <div class="activity-text">Near-miss reported — unsecured scaffold board, Zone B. Under investigation.</div>
+        <div class="activity-time">29 Mar 2026 · 14:12</div>
+      </div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-dot green"></div>
+      <div>
+        <div class="activity-text">PUWER inspection complete — all plant &amp; equipment certified</div>
+        <div class="activity-time">25 Mar 2026 · 11:00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HSE link -->
+  <div class="section-title">Regulatory</div>
+  <button class="hse-link" onclick="window.open('https://www.hse.gov.uk/construction','_blank'); showToast('Opening HSE Construction guidance…')">
+    <div class="hse-logo-box">🏛️</div>
+    <div class="hse-text">
+      <h4>HSE Construction Hub</h4>
+      <p>Regulations, guidance &amp; F10 notification portal</p>
+    </div>
+    <div class="hse-arrow">›</div>
+  </button>
+
+  <!-- Emergency contact -->
+  <div class="section-title">Emergency</div>
+  <button class="firstaid-btn" onclick="firstAidAlert()">
+    <div class="emergency-icon">🚑</div>
+    <div class="emergency-text">
+      <h4 style="color:#fff;">First Aid Emergency</h4>
+      <p style="color:rgba(255,255,255,0.75);">Call 999 · Alert site first aider · Accident book</p>
+    </div>
+    <div class="emergency-arrow" style="color:rgba(255,255,255,0.50);font-size:18px;">›</div>
+  </button>
+
+  <button class="emergency-btn" onclick="emergencyContact()">
+    <div class="emergency-icon">🆘</div>
+    <div class="emergency-text">
+      <h4>Report Dangerous Occurrence</h4>
+      <p>RIDDOR reportable incident · HSE 24hr line</p>
+    </div>
+    <div class="emergency-arrow">›</div>
+  </button>
+
+  <div class="pb-safe"></div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     SCREEN: DOCUMENTS
+════════════════════════════════ -->
+<section class="screen" id="screen-documents">
+
+  <div class="doc-summary-bar">
+    <div class="ds-item"><div class="ds-dot ok"></div><span style="color:var(--green);">9 Current</span></div>
+    <div class="ds-sep"></div>
+    <div class="ds-item"><div class="ds-dot warn"></div><span style="color:var(--amber);">2 Review</span></div>
+    <div class="ds-sep"></div>
+    <div class="ds-item"><div class="ds-dot exp"></div><span style="color:var(--red);">0 Expired</span></div>
+    <div style="margin-left:auto;font-size:11px;color:var(--text-light);">11 total</div>
+  </div>
+
+  <div class="doc-search-wrap">
+    <span class="doc-search-icon">🔍</span>
+    <input class="doc-search" type="search" placeholder="Search documents…" oninput="searchDocs(this.value)" id="doc-search-input">
+  </div>
+
+  <div class="doc-filter-row">
+    <button class="filter-chip active" onclick="filterDocs(this,'all')">All</button>
+    <button class="filter-chip" onclick="filterDocs(this,'legal')">Legal</button>
+    <button class="filter-chip" onclick="filterDocs(this,'risk')">Risk</button>
+    <button class="filter-chip" onclick="filterDocs(this,'method')">Method</button>
+    <button class="filter-chip" onclick="filterDocs(this,'training')">Training</button>
+    <button class="filter-chip" onclick="filterDocs(this,'inspect')">Inspections</button>
+  </div>
+
+  <!-- Skeleton loader -->
+  <div class="doc-skeleton" id="doc-skeleton">
+    <div class="skel-row"><div class="skel-icon"></div><div class="skel-lines"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line shorter"></div></div></div>
+    <div class="skel-row"><div class="skel-icon"></div><div class="skel-lines"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line shorter"></div></div></div>
+    <div class="skel-row"><div class="skel-icon"></div><div class="skel-lines"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line shorter"></div></div></div>
+  </div>
+
+  <div class="doc-list" id="doc-list">
+
+    <div class="doc-card" data-cat="legal" data-name="construction phase plan cdm health safety" onclick="openDoc('Construction Phase Plan','CDM 2015 — Principal Contractor Health &amp; Safety Plan','Greenfield Build Ltd','12 Jan 2026','30 Nov 2026')">
+      <div class="doc-icon legal">📋</div>
+      <div class="doc-info">
+        <div class="doc-name">Construction Phase Plan</div>
+        <div class="doc-meta">CDM 2015 · v3 · Jan 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="legal" data-name="f10 hse notification notifiable project" onclick="openDoc('F10 HSE Notification','Notifiable Project — HSE Construction Notification','HSE Online Portal','08 Jan 2026','Project end')">
+      <div class="doc-icon legal">🏛️</div>
+      <div class="doc-info">
+        <div class="doc-name">F10 HSE Notification</div>
+        <div class="doc-meta">Ref: F10-2025-0471 · Submitted Jan 2026</div>
+      </div>
+      <div class="doc-status valid">Lodged</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="risk" data-name="risk assessment general site hazards" onclick="openDoc('General Site Risk Assessment','Hazard identification &amp; control measures — all zones','Site Manager T. Barker','15 Jan 2026','15 Jul 2026')">
+      <div class="doc-icon risk">⚠️</div>
+      <div class="doc-info">
+        <div class="doc-name">General Site Risk Assessment</div>
+        <div class="doc-meta">All zones · Review Jul 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="risk" data-name="excavation risk assessment trenching" onclick="openDoc('Excavation Risk Assessment','Trenching &amp; groundworks hazard control — Block C','Site Manager T. Barker','04 Nov 2025','04 May 2026')">
+      <div class="doc-icon risk">⛏️</div>
+      <div class="doc-info">
+        <div class="doc-name">Excavation Risk Assessment</div>
+        <div class="doc-meta">Block C · Review overdue</div>
+      </div>
+      <div class="doc-status review">Review</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="risk" data-name="hot works risk assessment welding cutting" onclick="openDoc('Hot Works Risk Assessment','Welding, cutting &amp; grinding hazard controls','CDM Coordinator J. Patel','10 Mar 2026','10 Sep 2026')">
+      <div class="doc-icon risk">🔥</div>
+      <div class="doc-info">
+        <div class="doc-name">Hot Works Risk Assessment</div>
+        <div class="doc-meta">Permit system — updated Mar 2026</div>
+      </div>
+      <div class="doc-status review">Review</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="method" data-name="method statement rams groundworks concrete" onclick="openDoc('Method Statement — Groundworks','Safe system of work for foundations and concrete pours','Greenfield Build Ltd','20 Mar 2026','20 Sep 2026')">
+      <div class="doc-icon method">📐</div>
+      <div class="doc-info">
+        <div class="doc-name">Method Statement — Groundworks</div>
+        <div class="doc-meta">Foundations &amp; concrete · Mar 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="method" data-name="method statement scaffold working at height" onclick="openDoc('Method Statement — Scaffolding &amp; WAH','Working at height safe system of work','Greenfield Build Ltd','20 Mar 2026','20 Sep 2026')">
+      <div class="doc-icon method">🪜</div>
+      <div class="doc-info">
+        <div class="doc-name">Method Statement — Scaffolding</div>
+        <div class="doc-meta">Working at height · Mar 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="training" data-name="site induction records workers cscs" onclick="openDoc('Site Induction Register','All worker induction records — sign-on log','Site Manager T. Barker','12 Jan 2026','Ongoing')">
+      <div class="doc-icon training">🪪</div>
+      <div class="doc-info">
+        <div class="doc-name">Site Induction Register</div>
+        <div class="doc-meta">34 workers · Updated 01 Apr 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="training" data-name="toolbox talk records training" onclick="openDoc('Toolbox Talk Register','Weekly safety briefing records &amp; signatures','Site Manager T. Barker','01 Jan 2026','Ongoing')">
+      <div class="doc-icon training">🗣️</div>
+      <div class="doc-info">
+        <div class="doc-name">Toolbox Talk Register</div>
+        <div class="doc-meta">12 sessions · Last 28 Mar 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="inspect" data-name="puwer plant equipment inspection certificate" onclick="openDoc('PUWER Plant Inspection Log','Work equipment inspection &amp; certification register','Appointed Competent Person','25 Mar 2026','25 Sep 2026')">
+      <div class="doc-icon inspect">🔧</div>
+      <div class="doc-info">
+        <div class="doc-name">PUWER Plant Inspection Log</div>
+        <div class="doc-meta">All plant certified · Mar 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+    <div class="doc-card" data-cat="inspect" data-name="first aid accident book record" onclick="openDoc('First Aid &amp; Accident Book','First aid box inspection record &amp; accident log','Site Manager T. Barker','25 Mar 2026','25 Jun 2026')">
+      <div class="doc-icon inspect">🩺</div>
+      <div class="doc-info">
+        <div class="doc-name">First Aid &amp; Accident Book</div>
+        <div class="doc-meta">Box inspected 25 Mar 2026</div>
+      </div>
+      <div class="doc-status valid">Current</div>
+      <div class="doc-arrow">›</div>
+    </div>
+
+  </div>
+
+  <div class="pb-safe"></div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     SCREEN: REPORT
+════════════════════════════════ -->
+<section class="screen" id="screen-report">
+
+  <div id="report-form-view">
+    <div class="report-intro">
+      <div class="report-intro-icon">⚠️</div>
+      <div>
+        <h3>Report a Hazard or Incident</h3>
+        <p>Submit near-misses, unsafe conditions, accidents, or compliance concerns to the site management team.</p>
+      </div>
+    </div>
+
+    <div class="form-body">
+      <div class="form-group" style="margin-top:16px;">
+        <label class="form-label">Site</label>
+        <input class="form-control" type="text" value="Greenfield Phase 2 · CDM-2025-0471" readonly style="background:var(--brand-light);color:var(--text-mid);">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-control" id="report-category">
+          <option value="">— Select a category —</option>
+          <option>Near Miss</option>
+          <option>Accident / Injury</option>
+          <option>Unsafe Condition</option>
+          <option>Plant / Equipment Defect</option>
+          <option>Falling Object / Overhead Risk</option>
+          <option>Working at Height</option>
+          <option>Excavation / Ground Works</option>
+          <option>Fire / Hot Works</option>
+          <option>PPE Non-Compliance</option>
+          <option>Induction / Training Gap</option>
+          <option>Documentation Issue</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Severity</label>
+        <div class="severity-grid">
+          <div class="severity-btn low"    onclick="setSeverity(this,'low')">   <span class="sev-icon">🟢</span><span class="sev-label">Low</span></div>
+          <div class="severity-btn medium" onclick="setSeverity(this,'medium')"><span class="sev-icon">🟡</span><span class="sev-label">Medium</span></div>
+          <div class="severity-btn high"   onclick="setSeverity(this,'high')">  <span class="sev-icon">🔴</span><span class="sev-label">High</span></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Location on Site</label>
+        <input class="form-control" type="text" id="report-location" placeholder="e.g. Block C, Zone 2, Scaffold Level 3">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="report-desc" placeholder="Describe what happened or the hazard observed — what was the risk, who was involved, and any immediate action taken…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input class="form-control" type="text" id="reporter-name" placeholder="Full name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Add Photo (optional)</label>
+        <div class="photo-upload" onclick="showToast('📷 Camera / gallery opens in production build')">
+          <div class="upload-icon">📷</div>
+          <p>Tap to attach a photo</p>
+          <span>JPEG or PNG · max 10MB</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="submitReport()">Submit Report →</button>
+
+      <p style="text-align:center;font-size:11px;color:var(--text-light);margin-top:12px;padding-bottom:4px;">
+        Reports are sent immediately to the Site Manager<br>and logged with the CDM Coordinator for compliance records.
+      </p>
+      <p style="text-align:center;font-size:11px;color:var(--red);margin-top:4px;font-weight:600;padding-bottom:4px;">
+        RIDDOR reportable incidents must also be reported to HSE within 10 days.
+      </p>
+    </div>
+  </div>
+
+  <!-- Confirmation screen -->
+  <div class="report-confirm" id="report-confirm">
+    <div class="confirm-icon">✅</div>
+    <div class="confirm-title">Report Submitted</div>
+    <div class="confirm-sub">Your report has been sent to the Site Manager and CDM Coordinator. A reference number has been issued for compliance records.</div>
+    <div class="confirm-detail" id="confirm-detail">
+      <div class="confirm-detail-row"><span class="cd-key">Reference</span><span class="cd-val" id="confirm-ref">—</span></div>
+      <div class="confirm-detail-row"><span class="cd-key">Site</span><span class="cd-val">Greenfield Phase 2</span></div>
+      <div class="confirm-detail-row"><span class="cd-key">Category</span><span class="cd-val" id="confirm-cat">—</span></div>
+      <div class="confirm-detail-row"><span class="cd-key">Severity</span><span class="cd-val" id="confirm-sev">—</span></div>
+      <div class="confirm-detail-row"><span class="cd-key">Submitted by</span><span class="cd-val" id="confirm-name">—</span></div>
+      <div class="confirm-detail-row"><span class="cd-key">Time</span><span class="cd-val" id="confirm-time">—</span></div>
+    </div>
+    <button class="btn-outline" onclick="resetReport()">Submit Another Report</button>
+  </div>
+
+  <div class="pb-safe"></div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     SCREEN: SITE
+════════════════════════════════ -->
+<section class="screen" id="screen-site">
+
+  <!-- Quick stats -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📅</div>
+      <div class="stat-val ok" id="site-days-val">—</div>
+      <div class="stat-label">Days to completion</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📂</div>
+      <div class="stat-val">11</div>
+      <div class="stat-label">Documents on file</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👷</div>
+      <div class="stat-val ok">34</div>
+      <div class="stat-label">Workers inducted</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-val warn">2</div>
+      <div class="stat-label">Actions open</div>
+    </div>
+  </div>
+
+  <!-- Site details -->
+  <div class="section-title">Site Details</div>
+  <div class="info-row">
+    <div class="info-item"><span class="info-key">Project Name</span><span class="info-val">Greenfield Phase 2</span></div>
+    <div class="info-item"><span class="info-key">CDM Reference</span><span class="info-val">CDM-2025-0471</span></div>
+    <div class="info-item"><span class="info-key">Location</span><span class="info-val">Manchester, GM</span></div>
+    <div class="info-item"><span class="info-key">Project Type</span><span class="info-val">Residential — 48 Units</span></div>
+    <div class="info-item"><span class="info-key">Works Start</span><span class="info-val">12 Jan 2026</span></div>
+    <div class="info-item"><span class="info-key">Planned End</span><span class="info-val">30 Nov 2026</span></div>
+    <div class="info-item"><span class="info-key">Contract Value</span><span class="info-val">£4.2M</span></div>
+    <div class="info-item"><span class="info-key">Max Workers on Site</span><span class="info-val">38 simultaneous</span></div>
+  </div>
+
+  <!-- CDM Duty Holders -->
+  <div class="section-title">CDM Duty Holders</div>
+  <div class="info-row">
+    <div class="info-item"><span class="info-key">Client</span><span class="info-val">Elmwood Developments Ltd</span></div>
+    <div class="info-item"><span class="info-key">Principal Designer</span><span class="info-val">Ashfield Architects LLP</span></div>
+    <div class="info-item"><span class="info-key">Principal Contractor</span><span class="info-val">Greenfield Build Ltd</span></div>
+    <div class="info-item"><span class="info-key">CDM Coordinator</span><span class="info-val">J. Patel MCIOB</span></div>
+    <div class="info-item"><span class="info-key">Site Manager</span><span class="info-val">T. Barker</span></div>
+    <div class="info-item"><span class="info-key">First Aider on Site</span><span class="info-val">S. Hughes (FAW)</span></div>
+  </div>
+
+  <!-- Compliance -->
+  <div class="section-title">Regulatory Compliance</div>
+  <div class="info-row">
+    <div class="info-item"><span class="info-key">Notifiable Project</span><span class="info-val" style="color:var(--green);">Yes — F10 Lodged</span></div>
+    <div class="info-item"><span class="info-key">HSE F10 Ref</span><span class="info-val">F10-2025-0471</span></div>
+    <div class="info-item"><span class="info-key">F10 Submitted</span><span class="info-val">08 Jan 2026</span></div>
+    <div class="info-item"><span class="info-key">Governing Regs</span><span class="info-val">CDM 2015 / HSWA 1974</span></div>
+    <div class="info-item"><span class="info-key">Days to Completion</span><span class="info-val" style="color:var(--green);font-weight:700;" id="site-days-row">— days</span></div>
+  </div>
+
+  <!-- Key Regulations -->
+  <div class="section-title">Key Legislation</div>
+  <div class="reg-list">
+    <div class="reg-item">
+      <div class="reg-icon">📖</div>
+      <div>
+        <div class="reg-title">CDM Regulations 2015</div>
+        <div class="reg-sub">Construction (Design &amp; Management) Regulations — duty holder responsibilities, Construction Phase Plans, notifiable projects, and competence requirements.</div>
+      </div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-icon">⚖️</div>
+      <div>
+        <div class="reg-title">Health &amp; Safety at Work Act 1974</div>
+        <div class="reg-sub">Primary legislation placing duties on employers, employees and the self-employed to ensure, so far as reasonably practicable, a safe working environment.</div>
+      </div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-icon">🔧</div>
+      <div>
+        <div class="reg-title">PUWER 1998</div>
+        <div class="reg-sub">Provision and Use of Work Equipment Regulations — all plant, tools and machinery must be suitable, maintained, inspected and used by trained operatives.</div>
+      </div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-icon">📋</div>
+      <div>
+        <div class="reg-title">RIDDOR 2013</div>
+        <div class="reg-sub">Reporting of Injuries, Diseases and Dangerous Occurrences Regulations — specified injuries, over-7-day absences and dangerous occurrences must be reported to HSE.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Induction Checklist -->
+  <div class="section-title">Site Induction Checklist</div>
+  <div style="padding: 0 var(--cx);">
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">Emergency procedures &amp; muster points</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">Site rules, access &amp; signing-in procedure</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">Hazard zones &amp; exclusion areas</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">PPE requirements by zone</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">First aid location &amp; first aider identity</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">Reporting near-misses &amp; incidents</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">Manual handling &amp; working at height awareness</div>
+    </div>
+    <div class="induction-item" onclick="toggleInduction(this)">
+      <div class="induction-checkbox">✓</div>
+      <div class="induction-label">CSCS card / competency check</div>
+    </div>
+  </div>
+
+  <!-- CDM Coordinator contact -->
+  <div class="section-title">CDM Coordinator</div>
+  <div class="contact-card">
+    <div class="cv-header">
+      <div class="cv-avatar">👤</div>
+      <div>
+        <div class="cv-name">J. Patel MCIOB</div>
+        <div class="cv-role">CDM Coordinator · Greenfield Phase 2</div>
+      </div>
+    </div>
+    <div class="cv-actions">
+      <button class="cv-action-btn" onclick="showToast('📞 In production this dials the CDM coordinator directly.')">
+        <span class="cv-btn-icon">📞</span>Call
+      </button>
+      <button class="cv-action-btn" onclick="showToast('✉️ In production this opens the mail client.')">
+        <span class="cv-btn-icon">✉️</span>Email
+      </button>
+      <button class="cv-action-btn" onclick="window.open('https://www.hse.gov.uk','_blank')">
+        <span class="cv-btn-icon">🏛️</span>HSE
+      </button>
+    </div>
+  </div>
+
+  <!-- SafetyLoop device info -->
+  <div class="section-title">This SafetyLoop™ Device</div>
+  <div class="info-row">
+    <div class="info-item"><span class="info-key">Device ID</span><span class="info-val">SL-GF2-0471</span></div>
+    <div class="info-item"><span class="info-key">NFC Tag Type</span><span class="info-val">ISO 14443-A</span></div>
+    <div class="info-item"><span class="info-key">Last Scan</span><span class="info-val" id="last-scan-info">Just now</span></div>
+    <div class="info-item"><span class="info-key">Total Scans</span><span class="info-val">127</span></div>
+    <div class="info-item"><span class="info-key">Installed By</span><span class="info-val">Superspree Ltd</span></div>
+    <div class="info-item"><span class="info-key">Platform</span><span class="info-val">Superspree Wayfinding v3</span></div>
+  </div>
+
+  <div style="text-align:center;padding:16px 16px 8px;">
+    <div style="font-size:11px;color:var(--text-light);line-height:1.8;">
+      SafetyLoop™ v1 · Superspree Ltd<br>
+      Construction Site Compliance Edition<br>
+      <a href="https://www.hse.gov.uk/construction" target="_blank" style="color:var(--brand-green);font-weight:600;">hse.gov.uk/construction</a>
+    </div>
+  </div>
+
+  <div class="pb-safe"></div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     DOCUMENT MODAL
+════════════════════════════════ -->
+<div class="modal-overlay" id="doc-modal" onclick="closeModalOutside(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-loading" id="modal-loading">
+      <div class="spinner"></div>
+      <p>Loading document…</p>
+    </div>
+    <div id="modal-content" style="display:none;">
+      <div class="modal-title" id="modal-title">Document</div>
+      <div class="modal-sub" id="modal-sub">—</div>
+      <div class="modal-meta-grid">
+        <div class="modal-meta-item"><div class="mm-label">Prepared By</div><div class="mm-val" id="modal-issuer">—</div></div>
+        <div class="modal-meta-item"><div class="mm-label">Issue Date</div><div class="mm-val" id="modal-issued">—</div></div>
+        <div class="modal-meta-item"><div class="mm-label">Review / Expiry</div><div class="mm-val" id="modal-expiry">—</div></div>
+        <div class="modal-meta-item"><div class="mm-label">Site Ref</div><div class="mm-val">CDM-2025-0471</div></div>
+      </div>
+      <button class="btn-secondary" onclick="showToast('📄 In production: opens full PDF from secure cloud storage.')">
+        <span>📄</span> Open Full Document
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+  // ══════════════════════════════════════
+  // BOOT — timestamps & dynamic days
+  // ══════════════════════════════════════
+  const now = new Date();
+  const fmt     = d => d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  const fmtDate = d => d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+
+  document.getElementById('scan-time').textContent       = fmt(now) + ' · ' + fmtDate(now);
+  document.getElementById('last-scan-info').textContent  = fmt(now) + ' · ' + fmtDate(now);
+  document.getElementById('last-updated-ts').textContent = 'Updated ' + fmt(now);
+  document.getElementById('last-sync-time').textContent  = fmt(now);
+
+  // Dynamic days remaining to project completion
+  const endDate  = new Date('2026-11-30');
+  const startDate= new Date('2026-01-12');
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math.max(0, Math.ceil((endDate - now) / msPerDay));
+  const totalDays= Math.ceil((endDate - startDate) / msPerDay);
+  const pct      = Math.max(0, Math.min(100, ((totalDays - daysLeft) / totalDays) * 100));
+
+  document.getElementById('days-remaining-display').innerHTML = daysLeft + ' <span>days remaining</span>';
+  document.getElementById('site-days-val').textContent  = daysLeft;
+  document.getElementById('site-days-row').textContent  = daysLeft + ' days';
+
+  const siteDaysEl = document.getElementById('site-days-val');
+  if (daysLeft < 30)      { siteDaysEl.className = 'stat-val danger'; }
+  else if (daysLeft < 90) { siteDaysEl.className = 'stat-val warn'; }
+  else                    { siteDaysEl.className = 'stat-val ok'; }
+
+  // Animate progress bar (shows elapsed portion)
+  setTimeout(() => {
+    const fill = document.getElementById('cert-progress');
+    if (fill) {
+      fill.style.width = pct + '%';
+      if (daysLeft < 60) fill.classList.add('warning');
+    }
+  }, 350);
+
+  // ══════════════════════════════════════
+  // OFFLINE DETECTION
+  // ══════════════════════════════════════
+  function updateOnlineStatus() {
+    const banner  = document.getElementById('offline-banner');
+    const dot     = document.getElementById('conn-dot-inner');
+    const label   = document.getElementById('conn-label');
+    const connDot = document.getElementById('conn-dot');
+
+    if (navigator.onLine) {
+      banner.classList.remove('show');
+      dot.style.background       = '#68D391';
+      label.textContent          = 'Live';
+      label.style.color          = '#9AE6B4';
+      connDot.style.background   = 'rgba(255,255,255,0.10)';
+    } else {
+      banner.classList.add('show');
+      dot.style.background       = '#F6AD55';
+      label.textContent          = 'Offline';
+      label.style.color          = '#F6AD55';
+      connDot.style.background   = 'rgba(246,173,85,0.15)';
+    }
+  }
+
+  window.addEventListener('online',  updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus();
+
+  // ══════════════════════════════════════
+  // TAB SWITCHING
+  // ══════════════════════════════════════
+  function showTab(tab, btn) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('screen-' + tab).classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.scrollTo(0, 0);
+
+    if (tab === 'documents') {
+      const skeleton = document.getElementById('doc-skeleton');
+      const list     = document.getElementById('doc-list');
+      skeleton.classList.add('show');
+      list.style.display = 'none';
+      setTimeout(() => {
+        skeleton.classList.remove('show');
+        list.style.display = '';
+      }, 600);
+    }
+  }
+
+  // ══════════════════════════════════════
+  // DOCUMENT SEARCH & FILTER
+  // ══════════════════════════════════════
+  function searchDocs(query) {
+    const q = query.toLowerCase().trim();
+    document.querySelectorAll('.doc-card').forEach(card => {
+      const name = card.dataset.name || '';
+      card.classList.toggle('hidden', q.length > 0 && !name.includes(q));
+    });
+  }
+
+  function filterDocs(btn, cat) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const query = (document.getElementById('doc-search-input').value || '').toLowerCase().trim();
+    document.querySelectorAll('.doc-card').forEach(card => {
+      const matchCat    = cat === 'all' || card.dataset.cat === cat;
+      const matchSearch = query.length === 0 || (card.dataset.name || '').includes(query);
+      card.classList.toggle('hidden', !(matchCat && matchSearch));
+    });
+  }
+
+  // ══════════════════════════════════════
+  // DOCUMENT MODAL
+  // ══════════════════════════════════════
+  function openDoc(title, sub, issuer, issued, expiry) {
+    document.getElementById('modal-loading').style.display  = 'flex';
+    document.getElementById('modal-content').style.display  = 'none';
+    document.getElementById('doc-modal').classList.add('open');
+
+    setTimeout(() => {
+      document.getElementById('modal-title').textContent   = title;
+      document.getElementById('modal-sub').textContent     = sub;
+      document.getElementById('modal-issuer').textContent  = issuer;
+      document.getElementById('modal-issued').textContent  = issued;
+      document.getElementById('modal-expiry').textContent  = expiry;
+      document.getElementById('modal-loading').style.display = 'none';
+      document.getElementById('modal-content').style.display = 'block';
+    }, 700);
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('doc-modal')) {
+      document.getElementById('doc-modal').classList.remove('open');
+    }
+  }
+
+  // ══════════════════════════════════════
+  // OUTSTANDING ACTIONS PANEL
+  // ══════════════════════════════════════
+  function toggleActions() {
+    const body    = document.getElementById('actions-body');
+    const chevron = document.getElementById('actions-chevron');
+    body.classList.toggle('open');
+    chevron.classList.toggle('open');
+  }
+
+  let openActionCount = 2;
+
+  function acknowledgeAction(btn) {
+    const item  = btn.closest('.action-item');
+    const badge = item.querySelector('.action-badge');
+    badge.textContent = 'Resolved';
+    badge.classList.add('resolved');
+    btn.remove();
+    openActionCount = Math.max(0, openActionCount - 1);
+    const countEl  = document.getElementById('actions-count-badge');
+    const titleEl  = document.getElementById('actions-header-title');
+    countEl.textContent = openActionCount;
+    if (openActionCount === 0) {
+      titleEl.textContent = 'No Open Actions';
+      document.getElementById('report-badge').style.display = 'none';
+    } else {
+      titleEl.textContent = openActionCount + ' Open Action' + (openActionCount > 1 ? 's' : '') + ' Require Attention';
+      document.getElementById('report-badge').textContent = openActionCount;
+    }
+    showToast('✅ Action marked as resolved');
+  }
+
+  // ══════════════════════════════════════
+  // SEVERITY SELECTOR
+  // ══════════════════════════════════════
+  let selectedSeverity = '';
+
+  function setSeverity(el, level) {
+    document.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedSeverity = level;
+  }
+
+  // ══════════════════════════════════════
+  // REPORT SUBMISSION
+  // ══════════════════════════════════════
+  function submitReport() {
+    const cat  = document.getElementById('report-category').value;
+    const desc = document.getElementById('report-desc').value.trim();
+    const name = document.getElementById('reporter-name').value.trim();
+
+    if (!cat)              { showToast('⚠️ Please select a category'); return; }
+    if (!selectedSeverity) { showToast('⚠️ Please select a severity level'); return; }
+    if (!desc)             { showToast('⚠️ Please describe the hazard or incident'); return; }
+    if (!name)             { showToast('⚠️ Please enter your name'); return; }
+
+    const ref = 'INC-' + Date.now().toString(36).toUpperCase().slice(-6);
+    document.getElementById('confirm-ref').textContent  = ref;
+    document.getElementById('confirm-cat').textContent  = cat;
+    document.getElementById('confirm-sev').textContent  = selectedSeverity.charAt(0).toUpperCase() + selectedSeverity.slice(1);
+    document.getElementById('confirm-name').textContent = name;
+    document.getElementById('confirm-time').textContent = fmt(new Date()) + ' · ' + fmtDate(new Date());
+
+    document.getElementById('report-form-view').style.display = 'none';
+    document.getElementById('report-confirm').classList.add('show');
+    window.scrollTo(0, 0);
+  }
+
+  function resetReport() {
+    document.getElementById('report-category').value = '';
+    document.getElementById('report-desc').value     = '';
+    document.getElementById('reporter-name').value   = '';
+    document.getElementById('report-location').value = '';
+    document.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('active'));
+    selectedSeverity = '';
+    document.getElementById('report-form-view').style.display = 'block';
+    document.getElementById('report-confirm').classList.remove('show');
+  }
+
+  // ══════════════════════════════════════
+  // EMERGENCY CONTACTS
+  // ══════════════════════════════════════
+  function firstAidAlert() {
+    if (confirm('FIRST AID EMERGENCY\n\nImmediate actions:\n1. Call 999\n2. Alert S. Hughes (First Aider on site)\n3. Complete accident book entry\n\nProceed?')) {
+      showToast('🚑 First aid protocol activated — call 999');
+    }
+  }
+
+  function emergencyContact() {
+    if (confirm('RIDDOR DANGEROUS OCCURRENCE\n\nThis incident may require reporting to HSE.\n\nHSE Incident Contact Centre: 0345 300 9923\nAvailable Mon–Fri 08:30–17:00\n\nOut of hours: Contact site manager T. Barker.\n\nProceed?')) {
+      showToast('📞 Connecting to HSE Incident Contact Centre…');
+    }
+  }
+
+  // ══════════════════════════════════════
+  // INDUCTION CHECKLIST TOGGLE
+  // ══════════════════════════════════════
+  function toggleInduction(item) {
+    const box   = item.querySelector('.induction-checkbox');
+    const label = item.querySelector('.induction-label');
+    const isChecked = box.classList.contains('checked');
+    box.classList.toggle('checked', !isChecked);
+    box.textContent = isChecked ? '' : '✓';
+    label.classList.toggle('checked', !isChecked);
+  }
+
+  // Initialise all induction items as checked
+  document.querySelectorAll('.induction-checkbox').forEach(box => box.classList.add('checked'));
+  document.querySelectorAll('.induction-label').forEach(label => label.classList.add('checked'));
+
+  // ══════════════════════════════════════
+  // TOAST
+  // ══════════════════════════════════════
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3800);
+  }
+</script>
+</body>
+</html>
